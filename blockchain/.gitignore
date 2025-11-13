@@ -1,0 +1,20 @@
+# Hardhat
+node_modules
+cache
+artifacts
+deployments/*.json
+!deployments/.gitkeep
+
+# Environment
+.env
+
+# TypeChain
+typechain
+typechain-types
+
+# Coverage
+coverage
+coverage.json
+
+# Logs
+*.log
