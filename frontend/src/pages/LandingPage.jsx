@@ -295,13 +295,13 @@ const LandingFooter = () => {
             </h3>
             <div className="space-y-3 text-gray-300">
               <p className="flex items-center gap-2">
-                <span className="text-indigo-400">📧</span> support@trustpay.in
+                <span className="text-indigo-400">📧</span> kunalpsingh25@gmail.com
               </p>
               <p className="flex items-center gap-2">
-                <span className="text-purple-400">📞</span> +91 98765 43210
+                <span className="text-purple-400">📞</span> +91 90058 10309
               </p>
               <p className="flex items-center gap-2">
-                <span className="text-pink-400">📍</span> Mumbai, Maharashtra, India
+                <span className="text-pink-400">📍</span> Greater Noida, Uttar Pradesh, India
               </p>
             </div>
           </div>
