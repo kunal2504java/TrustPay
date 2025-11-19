@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import apiClient from '../../services/api';
 import { UserIcon, IndianRupeeIcon, FileTextIcon } from '../Icons';
+import PaymentModal from './PaymentModal';
 
 export default function CreateEscrowFormPage({ setActivePage }) {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ export default function CreateEscrowFormPage({ setActivePage }) {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentData, setPaymentData] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +32,7 @@ export default function CreateEscrowFormPage({ setActivePage }) {
     setMessage({ type: '', text: '' });
 
     try {
-      const escrow = await apiClient.createEscrow({
+      const response = await apiClient.createEscrow({
         payee_vpa: formData.payeeVpa,
         amount: Math.round(parseFloat(formData.amount) * 100), // Convert to paise
         description: formData.description,
@@ -38,21 +41,20 @@ export default function CreateEscrowFormPage({ setActivePage }) {
         condition: 'manual_confirm'
       });
 
-      console.log('Escrow created:', escrow);
+      console.log('Escrow created:', response);
+      
+      // Store payment data and show payment modal
+      setPaymentData({
+        escrowId: response.escrow.id,
+        paymentOrder: response.payment_order,
+        amount: response.escrow.amount
+      });
+      setShowPaymentModal(true);
+      
       setMessage({ 
         type: 'success', 
-        text: `Escrow created successfully! ID: ${escrow.id.substring(0, 8)}...` 
+        text: 'Escrow created! Please complete the payment.' 
       });
-      
-      // Reset form
-      setFormData({ payeeVpa: '', amount: '', description: '', orderId: '' });
-      
-      // Redirect to dashboard after 2 seconds
-      setTimeout(() => {
-        if (setActivePage) {
-          setActivePage('dashboard');
-        }
-      }, 2000);
     } catch (error) {
       console.error('Failed to create escrow:', error);
       setMessage({ 
@@ -62,6 +64,33 @@ export default function CreateEscrowFormPage({ setActivePage }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePaymentSuccess = (razorpayResponse) => {
+    console.log('Payment completed:', razorpayResponse);
+    setShowPaymentModal(false);
+    setMessage({ 
+      type: 'success', 
+      text: 'Payment successful! Your escrow is now active.' 
+    });
+    
+    // Reset form
+    setFormData({ payeeVpa: '', amount: '', description: '', orderId: '' });
+    
+    // Redirect to dashboard after 2 seconds
+    setTimeout(() => {
+      if (setActivePage) {
+        setActivePage('dashboard');
+      }
+    }, 2000);
+  };
+
+  const handlePaymentClose = () => {
+    setShowPaymentModal(false);
+    setMessage({ 
+      type: 'info', 
+      text: 'Payment cancelled. You can complete the payment later from your dashboard.' 
+    });
   };
 
   return (
@@ -162,6 +191,8 @@ export default function CreateEscrowFormPage({ setActivePage }) {
             className={`p-4 rounded-lg border ${
               message.type === 'success'
                 ? 'bg-green-500/20 text-green-300 border-green-500/30'
+                : message.type === 'info'
+                ? 'bg-blue-500/20 text-blue-300 border-blue-500/30'
                 : 'bg-red-500/20 text-red-300 border-red-500/30'
             }`}
           >
@@ -169,6 +200,17 @@ export default function CreateEscrowFormPage({ setActivePage }) {
           </div>
         )}
       </form>
+
+      {/* Payment Modal */}
+      {showPaymentModal && paymentData && (
+        <PaymentModal
+          escrowId={paymentData.escrowId}
+          paymentOrder={paymentData.paymentOrder}
+          amount={paymentData.amount}
+          onSuccess={handlePaymentSuccess}
+          onClose={handlePaymentClose}
+        />
+      )}
     </div>
   );
 }

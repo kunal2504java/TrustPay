@@ -153,6 +153,14 @@ class ApiClient {
     return this.post(`/api/v1/escrows/${escrowId}/dispute`, { reason });
   }
 
+  async getPaymentStatus(escrowId) {
+    return this.get(`/api/v1/escrows/${escrowId}/payment-status`);
+  }
+
+  async cancelEscrow(escrowId, reason) {
+    return this.post(`/api/v1/escrows/${escrowId}/cancel`, { reason });
+  }
+
   // ============ Health Check ============
 
   async healthCheck() {

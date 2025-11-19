@@ -130,7 +130,12 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
     - Return both escrow and order details
     - _Requirements: 1.1, 1.2_
 
-  - [ ] 4.2 Implement payment success handler
+  - [x] 4.2 Implement payment success handler
+
+
+
+
+
     - Write `handle_payment_success()` method
     - Update escrow status to HELD
     - Store razorpay_payment_id and payment_completed_at
@@ -138,24 +143,32 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
     - Trigger blockchain update
     - _Requirements: 1.4, 2.4, 5.1_
 
+
+
   - [ ] 4.3 Implement fund release logic
     - Write `release_funds()` method
     - Verify both parties confirmed
     - Call RazorpayService to create payout
     - Update escrow status to RELEASING
     - Store payout_initiated_at
+
+
     - _Requirements: 3.1, 3.2_
 
   - [ ] 4.4 Implement payout success handler
     - Write `handle_payout_success()` method
     - Update escrow status to RELEASED
     - Store razorpay_payout_id and payout_completed_at
+
+
     - Create PaymentLog entry
     - Trigger blockchain update
     - _Requirements: 3.3, 5.1_
 
   - [ ] 4.5 Implement refund processing
     - Write `process_refund()` method
+
+
     - Call RazorpayService to create refund
     - Update escrow status to REFUNDED
     - Store razorpay_refund_id
@@ -163,28 +176,48 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
     - Send notification to payer
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
+
+
   - [ ] 4.6 Implement retry logic for failed operations
     - Write `retry_with_backoff()` utility function
     - Apply to payout operations with exponential backoff
     - Update payment_retry_count on each attempt
     - Store error details in last_payment_error
+
+
     - Alert admin after max retries exceeded
+
+
+
+
+
     - _Requirements: 3.4, 3.5, 5.3_
 
 - [ ] 5. Create webhook endpoint and handlers
-  - [ ] 5.1 Create webhook router and main endpoint
+  - [x] 5.1 Create webhook router and main endpoint
+
+
     - Create `backend/app/api/v1/endpoints/webhooks.py`
     - Implement POST `/webhooks/razorpay` endpoint
     - Extract webhook body and signature from request
     - Verify signature using RazorpayService
+
+
     - Return 401 for invalid signatures
     - Parse webhook payload and route to appropriate handler
     - _Requirements: 2.1, 2.2, 5.4_
 
-  - [ ] 5.2 Implement payment.captured handler
+  - [x] 5.2 Implement payment.captured handler
+
+
     - Write `handle_payment_captured()` function
     - Extract escrow_id from webhook notes
     - Call EscrowService.handle_payment_success()
+
+
+
+
+
     - Create PaymentLog entry with webhook payload
     - Return success response
     - _Requirements: 1.3, 1.4, 5.1_
@@ -192,6 +225,8 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
   - [ ] 5.3 Implement payment.failed handler
     - Write `handle_payment_failed()` function
     - Extract escrow_id and error details
+
+
     - Update escrow with error message
     - Create PaymentLog entry
     - Send notification to payer
@@ -201,9 +236,13 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
     - Write `handle_payout_processed()` function
     - Extract escrow_id from reference_id
     - Call EscrowService.handle_payout_success()
+
+
     - Create PaymentLog entry
     - Send notifications to both parties
     - _Requirements: 3.3, 5.1_
+
+
 
   - [ ] 5.5 Implement payout.failed handler
     - Write `handle_payout_failed()` function
@@ -221,8 +260,12 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
     - Send notification to payer
     - _Requirements: 4.3, 5.1_
 
+
+
   - [ ] 5.7 Add webhook endpoint to API router
     - Update `backend/app/api/v1/api.py` to include webhooks router
+
+
     - Mount at `/webhooks` prefix
     - _Requirements: 2.1_
 
