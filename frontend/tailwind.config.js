@@ -6,6 +6,12 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'teko': ['Teko', 'sans-serif'],
+        'khand': ['Khand', 'sans-serif'],
+        'sans': ['Khand', 'sans-serif'], // Default body font
+        'display': ['Teko', 'sans-serif'], // For headings
+      },
       animation: {
         'float': 'float 4s ease-in-out infinite',
       },

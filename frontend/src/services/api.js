@@ -52,17 +52,16 @@ class ApiClient {
     try {
       const response = await fetch(url, config);
       
-      // Handle 401 Unauthorized
-      if (response.status === 401) {
-        this.clearAuth();
-        window.location.href = '/'; // Redirect to login
-        throw new Error('Unauthorized - Please login again');
-      }
-
       // Parse JSON response
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
+        // Handle 401 Unauthorized - only redirect if not on login/register endpoints
+        if (response.status === 401 && !endpoint.includes('/auth/')) {
+          this.clearAuth();
+          window.location.href = '/'; // Redirect to login
+        }
+        
         throw new Error(data?.detail || `HTTP error! status: ${response.status}`);
       }
 
@@ -108,13 +107,20 @@ class ApiClient {
 
   async login(email, password) {
     console.log('API: Attempting login for:', email);
-    const response = await this.post('/api/v1/auth/login', { email, password });
-    console.log('API: Login response:', response);
-    if (response.access_token) {
-      this.setToken(response.access_token);
-      console.log('API: Token saved');
+    try {
+      const response = await this.post('/api/v1/auth/login', { email, password });
+      console.log('API: Login response:', response);
+      if (response.access_token) {
+        this.setToken(response.access_token);
+        console.log('API: Token saved successfully');
+      } else {
+        console.error('API: No access_token in response');
+      }
+      return response;
+    } catch (error) {
+      console.error('API: Login failed with error:', error);
+      throw error;
     }
-    return response;
   }
 
   logout() {

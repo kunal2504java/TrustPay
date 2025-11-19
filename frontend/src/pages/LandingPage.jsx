@@ -3,6 +3,7 @@ import AnimatedText from '../components/AnimatedText';
 import BubbleMenu from '../components/BubbleMenu/BubbleMenu';
 import PixelCard from '../components/PixelCard/PixelCard';
 import LogoLoop from '../components/LogoLoop/LogoLoop';
+import PricingSection from '../components/PricingSection';
 import { ReactLogo, ViteLogo, TailwindLogo, NodeLogo, PolygonLogo, SolanaLogo, AvalancheLogo } from '../components/TechLogos';
 import { ShieldCheckIcon, UsersIcon, StoreIcon, GlobeIcon, HeartIcon, UserIcon, IndianRupeeIcon, FileTextIcon } from '../components/Icons';
 
@@ -322,6 +323,7 @@ export default function LandingPage({ onLogin }) {
       <TechStackBanner />
       <CustomerShowcase />
       <CreateEscrowTeaser onLogin={onLogin} />
+      <PricingSection onLogin={onLogin} />
       <LandingFooter />
     </div>
   );

@@ -3,7 +3,13 @@
 @tailwind utilities;
 
 * {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Khand', sans-serif;
+}
+
+/* Headings use Khand SemiBold for emphasis */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Khand', sans-serif;
+  font-weight: 600; /* SemiBold */
 }
 
 html {
