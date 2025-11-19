@@ -29,9 +29,27 @@ class EscrowResponse(EscrowBase):
     condition: str
     setu_collect_id: Optional[str]
     blockchain_tx_hash: Optional[str]
+    
+    # Razorpay fields
+    razorpay_order_id: Optional[str] = None
+    razorpay_payment_id: Optional[str] = None
+    razorpay_payout_id: Optional[str] = None
+    razorpay_refund_id: Optional[str] = None
+    
+    # Payment tracking
+    payment_initiated_at: Optional[datetime] = None
+    payment_completed_at: Optional[datetime] = None
+    payout_initiated_at: Optional[datetime] = None
+    payout_completed_at: Optional[datetime] = None
+    
     created_at: datetime
     updated_at: Optional[datetime]
     expires_at: Optional[datetime]
     
     class Config:
         from_attributes = True
+
+class EscrowWithPaymentOrder(BaseModel):
+    """Response when creating escrow with Razorpay payment order"""
+    escrow: EscrowResponse
+    payment_order: Dict[str, Any] = Field(..., description="Razorpay payment order details")

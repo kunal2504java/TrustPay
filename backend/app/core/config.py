@@ -19,6 +19,14 @@ class Settings(BaseSettings):
     SETU_API_KEY: Optional[str] = None
     SETU_BASE_URL: str = "https://api.setu.co"
     
+    # Razorpay Integration
+    RAZORPAY_KEY_ID: Optional[str] = None
+    RAZORPAY_KEY_SECRET: Optional[str] = None
+    RAZORPAY_WEBHOOK_SECRET: Optional[str] = None
+    
+    # Frontend URL
+    FRONTEND_URL: str = "http://localhost:3000"
+    
     # Redis
     REDIS_URL: str = "redis://localhost:6379"
     

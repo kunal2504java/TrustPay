@@ -6,20 +6,25 @@ from uuid import UUID
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.user import User
-from app.schemas.escrow import EscrowCreate, EscrowResponse
+from app.schemas.escrow import EscrowCreate, EscrowResponse, EscrowWithPaymentOrder
 from app.services.escrow_service import EscrowService
 
 router = APIRouter()
 
-@router.post("/create", response_model=EscrowResponse)
+@router.post("/create", response_model=EscrowWithPaymentOrder)
 async def create_escrow(
     escrow_data: EscrowCreate,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Create a new escrow transaction"""
+    """Create a new escrow transaction with Razorpay payment order"""
     escrow_service = EscrowService(db)
-    return await escrow_service.create_escrow(current_user.id, escrow_data)
+    escrow, payment_order = await escrow_service.create_escrow(current_user.id, escrow_data)
+    
+    return {
+        "escrow": escrow,
+        "payment_order": payment_order
+    }
 
 @router.get("/{escrow_id}", response_model=EscrowResponse)
 async def get_escrow(

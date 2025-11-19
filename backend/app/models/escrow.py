@@ -29,6 +29,22 @@ class Escrow(Base):
     setu_collect_id = Column(String(100), nullable=True)
     setu_virtual_account_id = Column(String(100), nullable=True)
     
+    # Razorpay Integration
+    razorpay_order_id = Column(String(100), nullable=True)
+    razorpay_payment_id = Column(String(100), nullable=True)
+    razorpay_payout_id = Column(String(100), nullable=True)
+    razorpay_refund_id = Column(String(100), nullable=True)
+    
+    # Payment Tracking
+    payment_initiated_at = Column(DateTime(timezone=True), nullable=True)
+    payment_completed_at = Column(DateTime(timezone=True), nullable=True)
+    payout_initiated_at = Column(DateTime(timezone=True), nullable=True)
+    payout_completed_at = Column(DateTime(timezone=True), nullable=True)
+    
+    # Error Tracking
+    last_payment_error = Column(Text, nullable=True)
+    payment_retry_count = Column(Integer, default=0)
+    
     # Blockchain
     blockchain_tx_hash = Column(String(66), nullable=True)
     
@@ -47,3 +63,4 @@ class Escrow(Base):
     confirmations = relationship("Confirmation", back_populates="escrow")
     disputes = relationship("Dispute", back_populates="escrow")
     blockchain_logs = relationship("BlockchainLog", back_populates="escrow")
+    payment_logs = relationship("PaymentLog", back_populates="escrow")

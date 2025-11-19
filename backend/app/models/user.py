@@ -18,6 +18,15 @@ class User(Base):
     kyc_status = Column(String(20), default="PENDING")  # PENDING, VERIFIED, REJECTED
     is_active = Column(Boolean, default=True)
     
+    # UPI Details for Payouts
+    upi_id = Column(String(100), nullable=True)  # Primary UPI ID for receiving payments
+    upi_verified = Column(Boolean, default=False)
+    
+    # Bank Account Details (Alternative to UPI)
+    bank_account_number = Column(String(50), nullable=True)
+    bank_ifsc = Column(String(11), nullable=True)
+    bank_account_name = Column(String(100), nullable=True)
+    
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
