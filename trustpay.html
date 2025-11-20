@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustPay - UPI Payments You Can Actually Trust</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+        
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .animate-float-delayed {
+            animation: float 4s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+        
+        .aurora-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .aurora-container canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // ==================== MOCK DATA ====================
+        const mockEscrows = [
+          {
+            id: 'ESC001',
+            payee_vpa: 'priya@okbank',
+            payer_vpa: 'merchant@okaxis',
+            amount: 5000,
+            status: 'HELD',
+            description: 'UI design milestone 1',
+            created_at: '2025-11-10T10:30:00Z',
+            timeline: [
+              { event: 'Escrow Created', timestamp: '2025-11-10T10:30:00Z' },
+              { event: 'Funded by Payer', timestamp: '2025-11-10T11:00:00Z' },
+              { event: 'Funds Held - Awaiting Confirmation', timestamp: '2025-11-10T11:00:00Z' }
+            ]
+          },
+          {
+            id: 'ESC002',
+            payee_vpa: 'priya@okbank',
+            payer_vpa: 'client@paytm',
+            amount: 12000,
+            status: 'HELD',
+            description: 'Logo design project',
+            created_at: '2025-11-09T14:20:00Z',
+            timeline: [
+              { event: 'Escrow Created', timestamp: '2025-11-09T14:20:00Z' },
+              { event: 'Funded by Payer', timestamp: '2025-11-09T15:00:00Z' },
+              { event: 'Funds Held - Awaiting Confirmation', timestamp: '2025-11-09T15:00:00Z' }
+            ]
+          },
+          {
+            id: 'ESC003',
+            payee_vpa: 'priya@okbank',
+            payer_vpa: 'startup@upi',
+            amount: 8500,
+            status: 'RELEASED',
+            description: 'Website mockup delivery',
+            created_at: '2025-11-05T09:15:00Z',
+            timeline: [
+              { event: 'Escrow Created', timestamp: '2025-11-05T09:15:00Z' },
+              { event: 'Funded by Payer', timestamp: '2025-11-05T10:00:00Z' },
+              { event: 'Funds Held', timestamp: '2025-11-05T10:00:00Z' },
+              { event: 'Released to Payee', timestamp: '2025-11-08T16:30:00Z' }
+            ]
+          },
+          {
+            id: 'ESC004',
+            payee_vpa: 'priya@okbank',
+            payer_vpa: 'buyer@okicici',
+            amount: 3000,
+            status: 'DISPUTED',
+            description: 'Social media graphics',
+            created_at: '2025-11-01T11:00:00Z',
+            timeline: [
+              { event: 'Escrow Created', timestamp: '2025-11-01T11:00:00Z' },
+              { event: 'Funded by Payer', timestamp: '2025-11-01T12:00:00Z' },
+              { event: 'Funds Held', timestamp: '2025-11-01T12:00:00Z' },
+              { event: 'Dispute Raised', timestamp: '2025-11-03T14:00:00Z' }
+            ]
+          }
+        ];
+
+        // ==================== ICONS ====================
+        const ShieldCheckIcon = () => (
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        );
+
+        const UsersIcon = () => (
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        );
+
+        const StoreIcon = () => (
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        );
+
+        const LayoutDashboardIcon = () => (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+        );
+
+        const PlusCircleIcon = () => (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        );
+
+        const LogOutIcon = () => (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+        );
+
+        const UserIcon = () => (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        );
+
+        const IndianRupeeIcon = () => (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 8h6m-5 0a3 3 0 110 6H9l3 3m-3-6h6m6 1a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        );
+
+        const FileTextIcon = () => (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        );
+
+        const ArrowLeftIcon = () => (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        );
+
+        const CheckCircleIcon = () => (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        );
+
+        const XCircleIcon = () => (
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        );
+
+        // ==================== LANDING PAGE COMPONENTS ====================
+        
+        const LandingHeader = ({ onLogin }) => {
+          return (
+            <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+              <div className="max-w-7xl mx-auto px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-indigo-600">
+                    <ShieldCheckIcon />
+                    <span className="text-xl font-black">TrustPay</span>
+                  </div>
+                  
+                  <nav className="hidden md:flex items-center space-x-8">
+                    <a href="#about" className="text-gray-700 hover:text-indigo-600 font-medium transition">About</a>
+                    <a href="#vision" className="text-gray-700 hover:text-indigo-600 font-medium transition">Vision</a>
+                    <a href="#contact" className="text-gray-700 hover:text-indigo-600 font-medium transition">Contact</a>
+                  </nav>
+                  
+                  <div className="flex items-center space-x-4">
+                    <button 
+                      onClick={onLogin}
+                      className="text-indigo-600 hover:text-indigo-700 font-semibold transition"
+                    >
+                      Login
+                    </button>
+                    <button 
+                      onClick={onLogin}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+                    >
+                      Get Started
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </header>
+          );
+        };
+
+        const HeroSection = ({ onLogin }) => {
+          return (
+            <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white pt-20">
+              <div className="max-w-5xl mx-auto px-6 text-center">
+                <h1 className="text-6xl md:text-8xl font-black mb-6">
+                  TrustPay
+                </h1>
+                <h2 className="text-3xl md:text-4xl font-light mb-4">
+                  UPI Payments You Can Actually Trust.
+                </h2>
+                <p className="text-xl md:text-2xl mb-12 text-white/90">
+                  The trust layer for India's payments. Pay safely, get paid confidently.
+                </p>
+                <button 
+                  onClick={onLogin}
+                  className="bg-white text-indigo-600 px-10 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105"
+                >
+                  Create Your First Escrow
+                </button>
+              </div>
+            </section>
+          );
+        };
+
+        const CustomerShowcase = () => {
+          return (
+            <section id="about" className="py-20 px-6 bg-gray-50">
+              <div className="max-w-6xl mx-auto">
+                <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-800">
+                  Who We Protect
+                </h2>
+                
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="bg-white rounded-2xl p-8 shadow-lg animate-float">
+                    <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-6 text-indigo-600">
+                      <UsersIcon />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4 text-gray-800">Freelancer Priya</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Needs payment assurance before delivering her creative work to new clients. With TrustPay, she knows the funds are secured before she starts the project.
+                    </p>
+                  </div>
+                  
+                  <div className="bg-white rounded-2xl p-8 shadow-lg animate-float-delayed">
+                    <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6 text-purple-600">
+                      <StoreIcon />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4 text-gray-800">Merchant Ramesh</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Wants to build trust with customers for his D2C store's pre-orders. TrustPay ensures customers feel safe paying upfront for products.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        const CreateEscrowTeaser = ({ onLogin }) => {
+          return (
+            <section className="py-20 px-6 bg-white">
+              <div className="max-w-2xl mx-auto">
+                <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">
+                  Simple. Secure. Seamless.
+                </h2>
+                
+                <div className="bg-white rounded-2xl shadow-2xl p-8 border-2 border-gray-200">
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Payee's UPI ID
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                          <UserIcon />
+                        </div>
+                        <input 
+                          type="text" 
+                          value="freelancer@okbank"
+                          disabled
+                          className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Amount (INR)
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                          <IndianRupeeIcon />
+                        </div>
+                        <input 
+                          type="text" 
+                          value="5,000"
+                          disabled
+                          className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Purpose
+                      </label>
+                      <div className="relative">
+                        <div className="absolute top-3 left-0 pl-4 pointer-events-none text-gray-400">
+                          <FileTextIcon />
+                        </div>
+                        <textarea 
+                          rows="3"
+                          value="UI design milestone 1"
+                          disabled
+                          className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 resize-none"
+                        />
+                      </div>
+                    </div>
+                    
+                    <button 
+                      onClick={onLogin}
+                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-lg font-bold text-lg hover:shadow-xl transition-all transform hover:scale-105"
+                    >
+                      Get Started to Create
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          );
+        };
+
+        const LandingFooter = () => {
+          return (
+            <footer className="bg-gray-900 text-white py-16 px-6">
+              <div className="max-w-6xl mx-auto">
+                <div className="grid md:grid-cols-2 gap-12 mb-12">
+                  <div id="vision">
+                    <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      At TrustPay, we envision a future where every digital transaction in India is secure, transparent, and trustworthy. We're building the infrastructure that empowers freelancers, merchants, and everyday users to transact with complete confidence through UPI-based escrow services.
+                    </p>
+                  </div>
+                  
+                  <div id="contact">
+                    <h3 className="text-2xl font-bold mb-4">Contact Us</h3>
+                    <div className="space-y-3 text-gray-300">
+                      <p>📧 support@trustpay.in</p>
+                      <p>📞 +91 98765 43210</p>
+                      <p>📍 Mumbai, Maharashtra, India</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
+                  <p>© 2025 TrustPay. All rights reserved.</p>
+                </div>
+              </div>
+            </footer>
+          );
+        };
+
+        const LandingPage = ({ onLogin }) => {
+          return (
+            <div>
+              <LandingHeader onLogin={onLogin} />
+              <HeroSection onLogin={onLogin} />
+              <CustomerShowcase />
+              <CreateEscrowTeaser onLogin={onLogin} />
+              <LandingFooter />
+            </div>
+          );
+        };
+
+        // ==================== DASHBOARD COMPONENTS ====================
+        
+        const Sidebar = ({ activePage, setActivePage, onLogout }) => {
+          const navItems = [
+            { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboardIcon /> },
+            { id: 'create', label: 'Create Escrow', icon: <PlusCircleIcon /> }
+          ];
+
+          return (
+            <div className="w-64 bg-gray-900 text-white h-screen fixed left-0 top-0 flex flex-col">
+              <div className="p-6 border-b border-gray-700">
+                <div className="flex items-center space-x-2 text-indigo-400">
+                  <ShieldCheckIcon />
+                  <h1 className="text-xl font-black">TrustPay</h1>
+                </div>
+              </div>
+
+              <nav className="flex-1 p-4">
+                {navItems.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActivePage(item.id)}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg mb-2 transition-all ${
+                      activePage === item.id
+                        ? 'bg-indigo-600 font-semibold'
+                        : 'hover:bg-gray-800'
+                    }`}
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </nav>
+
+              <div className="p-6 border-t border-gray-700">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center">
+                    <UserIcon />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">Freelancer Priya</p>
+                    <p className="text-xs text-gray-400">priya@okbank</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={onLogout}
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition font-semibold"
+                >
+                  <LogOutIcon />
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
+          );
+        };
+
+        const EscrowCard = ({ escrow, onClick }) => {
+          const statusColors = {
+            HELD: 'bg-yellow-100 text-yellow-800',
+            RELEASED: 'bg-green-100 text-green-800',
+            DISPUTED: 'bg-red-100 text-red-800'
+          };
+
+          return (
+            <div
+              onClick={onClick}
+              className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-shadow cursor-pointer border border-gray-200"
+            >
+              <div className="flex justify-between items-start mb-3">
+                <h3 className="font-semibold text-gray-800 text-lg">{escrow.description}</h3>
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusColors[escrow.status]}`}>
+                  {escrow.status}
+                </span>
+              </div>
+              <p className="text-gray-600 text-sm mb-2">To: {escrow.payer_vpa}</p>
+              <p className="text-2xl font-bold text-indigo-600">₹{escrow.amount.toLocaleString('en-IN')}</p>
+            </div>
+          );
+        };
+
+        const DashboardListPage = ({ setActivePage, setSelectedEscrowId }) => {
+          const [activeTab, setActiveTab] = useState('active');
+
+          const filteredEscrows = mockEscrows.filter(escrow => {
+            if (activeTab === 'active') {
+              return escrow.status === 'HELD' || escrow.status === 'DISPUTED';
+            }
+            return escrow.status === 'RELEASED';
+          });
+
+          const handleEscrowClick = (id) => {
+            setSelectedEscrowId(id);
+            setActivePage('detail');
+          };
+
+          return (
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800 mb-6">Your Escrows</h1>
+
+              <div className="flex space-x-4 mb-8 border-b border-gray-200">
+                <button
+                  onClick={() => setActiveTab('active')}
+                  className={`pb-3 px-4 font-semibold transition-colors ${
+                    activeTab === 'active'
+                      ? 'text-indigo-600 border-b-2 border-indigo-600'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Active
+                </button>
+                <button
+                  onClick={() => setActiveTab('completed')}
+                  className={`pb-3 px-4 font-semibold transition-colors ${
+                    activeTab === 'completed'
+                      ? 'text-indigo-600 border-b-2 border-indigo-600'
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Completed
+                </button>
+              </div>
+
+              {filteredEscrows.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {filteredEscrows.map(escrow => (
+                    <EscrowCard key={escrow.id} escrow={escrow} onClick={() => handleEscrowClick(escrow.id)} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-gray-500">
+                  <p>No escrows found in this category.</p>
+                </div>
+              )}
+            </div>
+          );
+        };
+
+        const CreateEscrowFormPage = () => {
+          const [formData, setFormData] = useState({
+            payeeVpa: '',
+            amount: '',
+            description: ''
+          });
+          const [message, setMessage] = useState({ type: '', text: '' });
+
+          const handleSubmit = (e) => {
+            e.preventDefault();
+            
+            if (!formData.payeeVpa || !formData.amount || !formData.description) {
+              setMessage({ type: 'error', text: 'Please fill in all fields.' });
+              return;
+            }
+
+            setTimeout(() => {
+              setMessage({ type: 'success', text: 'Escrow created successfully! Payment request sent.' });
+              setFormData({ payeeVpa: '', amount: '', description: '' });
+            }, 500);
+          };
+
+          return (
+            <div className="max-w-2xl mx-auto">
+              <h1 className="text-3xl font-bold text-gray-800 mb-8">Create a New Escrow</h1>
+
+              <div className="bg-white rounded-2xl shadow-xl p-8">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Payee's UPI ID
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                        <UserIcon />
+                      </div>
+                      <input
+                        type="text"
+                        value={formData.payeeVpa}
+                        onChange={(e) => setFormData({ ...formData, payeeVpa: e.target.value })}
+                        placeholder="freelancer@okbank"
+                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Amount (INR)
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                        <IndianRupeeIcon />
+                      </div>
+                      <input
+                        type="number"
+                        value={formData.amount}
+                        onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                        placeholder="5000"
+                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Purpose / Description
+                    </label>
+                    <div className="relative">
+                      <div className="absolute top-3 left-0 pl-4 pointer-events-none text-gray-400">
+                        <FileTextIcon />
+                      </div>
+                      <textarea
+                        rows="4"
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        placeholder="e.g., UI design milestone 1"
+                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-lg font-bold text-lg hover:shadow-xl transition-all transform hover:scale-105"
+                  >
+                    Create & Request Payment
+                  </button>
+
+                  {message.text && (
+                    <div
+                      className={`p-4 rounded-lg ${
+                        message.type === 'success'
+                          ? 'bg-green-50 text-green-800 border border-green-200'
+                          : 'bg-red-50 text-red-800 border border-red-200'
+                      }`}
+                    >
+                      {message.text}
+                    </div>
+                  )}
+                </form>
+              </div>
+            </div>
+          );
+        };
+
+        const EscrowDetailPage = ({ escrowId, setActivePage }) => {
+          const escrow = mockEscrows.find(e => e.id === escrowId);
+
+          if (!escrow) {
+            return (
+              <div className="text-center py-12">
+                <p className="text-gray-500">Escrow not found.</p>
+                <button
+                  onClick={() => setActivePage('dashboard')}
+                  className="mt-4 text-indigo-600 hover:text-indigo-700 font-semibold"
+                >
+                  Back to Dashboard
+                </button>
+              </div>
+            );
+          }
+
+          const handleConfirmRelease = () => {
+            alert('Release confirmed! Funds will be transferred to the payee.');
+          };
+
+          const handleRaiseDispute = () => {
+            alert('Dispute raised! Our team will review this case.');
+          };
+
+          const statusColors = {
+            HELD: 'bg-yellow-100 text-yellow-800',
+            RELEASED: 'bg-green-100 text-green-800',
+            DISPUTED: 'bg-red-100 text-red-800'
+          };
+
+          return (
+            <div className="max-w-4xl mx-auto">
+              <button
+                onClick={() => setActivePage('dashboard')}
+                className="flex items-center space-x-2 text-indigo-600 hover:text-indigo-700 font-semibold mb-6"
+              >
+                <ArrowLeftIcon />
+                <span>Back to Dashboard</span>
+              </button>
+
+              <h1 className="text-3xl font-bold text-gray-800 mb-8">Escrow Details</h1>
+
+              <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">{escrow.description}</h2>
+                    <p className="text-gray-500 text-sm">ID: {escrow.id}</p>
+                  </div>
+                  <span className={`px-4 py-2 rounded-full text-sm font-semibold ${statusColors[escrow.status]}`}>
+                    {escrow.status}
+                  </span>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Payee</p>
+                    <p className="font-semibold text-gray-800">{escrow.payee_vpa}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Payer</p>
+                    <p className="font-semibold text-gray-800">{escrow.payer_vpa}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Amount</p>
+                    <p className="text-3xl font-bold text-indigo-600">₹{escrow.amount.toLocaleString('en-IN')}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Created</p>
+                    <p className="font-semibold text-gray-800">
+                      {new Date(escrow.created_at).toLocaleDateString('en-IN', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
+                  </div>
+                </div>
+
+                {escrow.status === 'HELD' && (
+                  <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                    <button
+                      onClick={handleConfirmRelease}
+                      className="flex-1 flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                    >
+                      <CheckCircleIcon />
+                      <span>Confirm Release</span>
+                    </button>
+                    <button
+                      onClick={handleRaiseDispute}
+                      className="flex-1 flex items-center justify-center space-x-2 border-2 border-red-600 text-red-600 hover:bg-red-50 py-3 rounded-lg font-semibold transition-colors"
+                    >
+                      <XCircleIcon />
+                      <span>Raise Dispute</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-xl p-8">
+                <h3 className="text-xl font-bold text-gray-800 mb-6">Timeline</h3>
+                <div className="space-y-4">
+                  {escrow.timeline.map((event, index) => (
+                    <div key={index} className="flex items-start space-x-4">
+                      <div className="w-3 h-3 bg-indigo-600 rounded-full mt-1.5"></div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-800">{event.event}</p>
+                        <p className="text-sm text-gray-500">
+                          {new Date(event.timestamp).toLocaleString('en-IN', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        const AppDashboard = ({ onLogout }) => {
+          const [activePage, setActivePage] = useState('dashboard');
+          const [selectedEscrowId, setSelectedEscrowId] = useState(null);
+
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <Sidebar activePage={activePage} setActivePage={setActivePage} onLogout={onLogout} />
+
+              <div className="ml-64 p-8">
+                {activePage === 'dashboard' && (
+                  <DashboardListPage setActivePage={setActivePage} setSelectedEscrowId={setSelectedEscrowId} />
+                )}
+                {activePage === 'create' && <CreateEscrowFormPage />}
+                {activePage === 'detail' && (
+                  <EscrowDetailPage escrowId={selectedEscrowId} setActivePage={setActivePage} />
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        // ==================== MAIN APP ====================
+        
+        function App() {
+          const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+          return (
+            <div>
+              {!isLoggedIn ? (
+                <LandingPage onLogin={() => setIsLoggedIn(true)} />
+              ) : (
+                <AppDashboard onLogout={() => setIsLoggedIn(false)} />
+              )}
+            </div>
+          );
+        }
+
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

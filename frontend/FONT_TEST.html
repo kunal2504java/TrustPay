@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Font Test - Clash Grotesk</title>
+  <style>
+    @font-face {
+      font-family: 'Clash Grotesk';
+      src: url('/fonts/ClashGrotesk-Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    
+    body {
+      background: #000;
+      color: #fff;
+      padding: 50px;
+      font-family: Arial, sans-serif;
+    }
+    
+    .test-bold {
+      font-family: 'Clash Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 80px;
+      margin: 20px 0;
+    }
+    
+    .test-regular {
+      font-family: 'Clash Grotesk', sans-serif;
+      font-weight: 400;
+      font-size: 40px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Clash Grotesk Font Test</h1>
+  
+  <div class="test-bold">TrustPay (Bold - 700)</div>
+  <div class="test-regular">TrustPay (Regular - 400)</div>
+  
+  <p>If the fonts look different, Clash Grotesk is loading correctly.</p>
+  <p>If they look the same, there's a font loading issue.</p>
+</body>
+</html>

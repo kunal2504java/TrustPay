@@ -7,10 +7,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        'clash': ['Clash Grotesk', 'sans-serif'],
         'teko': ['Teko', 'sans-serif'],
         'khand': ['Khand', 'sans-serif'],
-        'sans': ['Khand', 'sans-serif'], // Default body font
-        'display': ['Teko', 'sans-serif'], // For headings
+        'sans': ['Clash Grotesk', 'sans-serif'], // Default body font
+        'display': ['Clash Grotesk', 'sans-serif'], // For headings
       },
       animation: {
         'float': 'float 4s ease-in-out infinite',

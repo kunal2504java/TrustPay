@@ -33,7 +33,7 @@ export default function Sidebar({ activePage, setActivePage, onLogout }) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.2 }}
-                className="text-xl font-black bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent whitespace-nowrap"
+                className="text-xl bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent whitespace-nowrap trustpay-brand"
               >
                 TrustPay
               </motion.h1>

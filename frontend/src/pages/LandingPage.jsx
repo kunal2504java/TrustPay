@@ -1,4 +1,4 @@
-import Aurora from '../components/Aurora/Aurora';
+import LiquidChrome from '../components/LiquidChrome/LiquidChrome';
 import AnimatedText from '../components/AnimatedText';
 import StaggeredMenu from '../components/StaggeredMenu/StaggeredMenu';
 import PixelCard from '../components/PixelCard/PixelCard';
@@ -11,6 +11,7 @@ const LandingHeader = ({ onLogin }) => {
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home', link: '#' },
     { label: 'About', ariaLabel: 'Learn about TrustPay', link: '#about' },
+    { label: 'Zyvro', ariaLabel: 'Visit Zyvro', link: 'https://zyvro.com' },
     { label: 'Pricing', ariaLabel: 'View pricing plans', link: '#pricing' },
     { label: 'Contact', ariaLabel: 'Get in touch', link: '#contact' }
   ];
@@ -42,26 +43,30 @@ const LandingHeader = ({ onLogin }) => {
 
 const HeroSection = ({ onLogin }) => {
   return (
-    <section className="min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-gray-900 via-blue-950 to-black">
-      <Aurora 
-        colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
-        blend={0.5}
-        amplitude={1.0}
-        speed={0.5}
-      />
+    <section className="min-h-screen flex flex-col relative overflow-hidden bg-black" id="hero-section">
+      <div className="absolute inset-0 opacity-40" style={{ pointerEvents: 'none' }}>
+        <LiquidChrome 
+          baseColor={[0.05, 0.05, 0.15]}
+          speed={0.3}
+          amplitude={0.4}
+          frequencyX={3}
+          frequencyY={3}
+          interactive={true}
+        />
+      </div>
       
       <div className="flex-1 flex items-center justify-center relative z-10">
-        <div className="max-w-5xl mx-auto px-6 text-center text-white pt-20">
+        <div className="max-w-5xl mx-auto px-6 text-center text-white pt-6">
           <AnimatedText 
             text="TrustPay" 
-            className="text-6xl md:text-8xl font-black mb-6"
+            className="text-6xl md:text-8xl mb-6 trustpay-brand"
             delay={0.05}
           />
           
-          <h2 className="text-3xl md:text-4xl font-light mb-4">
+          <h2 className="text-3xl md:text-4xl mb-4" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>
             UPI Payments You Can Actually Trust.
           </h2>
-          <p className="text-xl md:text-2xl mb-12 text-white/90">
+          <p className="text-xl md:text-2xl mb-12 text-white/90" style={{ fontFamily: 'Clash Grotesk', fontWeight: 200 }}>
             The trust layer for India's payments. Pay safely, get paid confidently.
           </p>
           <button 
@@ -116,7 +121,7 @@ const CustomerShowcase = () => {
     {
       title: 'Freelancer',
       role: 'Tech Freelancer',
-      description: 'Needs payment assurance before delivering work to new clients. Mobile-first, uses UPI daily.',
+      description: 'Needs payment assurance before delivering work to new clients. Mobile-first approach, relies on UPI for daily transactions.',
       icon: <UsersIcon />,
       variant: 'blue'
     },
@@ -144,9 +149,9 @@ const CustomerShowcase = () => {
   ];
 
   return (
-    <section id="about" className="py-20 px-6 bg-gradient-to-b from-black via-gray-900 to-gray-900">
+    <section id="about" className="py-20 px-6 bg-black">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
+        <h2 className="text-4xl md:text-5xl text-center mb-16 text-white" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>
           Who We Protect
         </h2>
         
@@ -158,10 +163,9 @@ const CustomerShowcase = () => {
                   <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 text-white">
                     {persona.icon}
                   </div>
-                  <h3 className="text-xl font-bold mb-2 text-white">{persona.title}</h3>
-                  <p className="text-sm font-semibold text-indigo-300 mb-3">{persona.role}</p>
+                  <h3 className="text-xl mb-4 text-white" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>{persona.title}</h3>
                 </div>
-                <p className="text-sm text-gray-300 leading-relaxed">
+                <p className="text-lg text-gray-300 leading-relaxed" style={{ fontFamily: 'Clash Grotesk', fontWeight: 200 }}>
                   {persona.description}
                 </p>
               </div>
@@ -175,18 +179,20 @@ const CustomerShowcase = () => {
 
 const CreateEscrowTeaser = ({ onLogin }) => {
   return (
-    <section className="py-20 px-6 bg-gradient-to-b from-gray-900 via-blue-950 to-gray-900 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-30">
-        <Aurora 
-          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
-          blend={0.3}
-          amplitude={0.5}
-          speed={0.3}
+    <section className="py-20 px-6 bg-black relative overflow-hidden">
+      <div className="absolute inset-0 opacity-20">
+        <LiquidChrome 
+          baseColor={[0.05, 0.05, 0.15]}
+          speed={0.2}
+          amplitude={0.3}
+          frequencyX={2}
+          frequencyY={2}
+          interactive={true}
         />
       </div>
       
       <div className="max-w-xl mx-auto relative z-10">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
+        <h2 className="text-4xl md:text-5xl text-center mb-12 text-white" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>
           Simple. Secure. Seamless.
         </h2>
         
@@ -258,7 +264,7 @@ const CreateEscrowTeaser = ({ onLogin }) => {
 
 const LandingFooter = () => {
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-black text-white py-16 px-6 border-t border-white/10">
+    <footer className="bg-black text-white py-16 px-6 border-t border-white/10">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 mb-12">
           <div id="vision">

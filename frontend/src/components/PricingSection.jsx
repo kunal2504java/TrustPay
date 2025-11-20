@@ -60,9 +60,9 @@ const PricingSection = ({ onLogin }) => {
   ];
 
   return (
-    <section className="py-20 px-6 bg-gradient-to-b from-gray-900 via-purple-950/30 to-gray-900 relative overflow-hidden">
+    <section className="py-20 px-6 bg-black relative overflow-hidden">
       {/* Background Effects */}
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600 rounded-full filter blur-[128px]"></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600 rounded-full filter blur-[128px]"></div>
       </div>
@@ -70,10 +70,10 @@ const PricingSection = ({ onLogin }) => {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-5xl text-white mb-4" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>
             Plans that work best for you
           </h2>
-          <p className="text-xl text-gray-300 mb-8">
+          <p className="text-xl text-gray-300 mb-8" style={{ fontFamily: 'Clash Grotesk', fontWeight: 200 }}>
             Trusted by thousands. Choose the perfect plan for your needs.
           </p>
 

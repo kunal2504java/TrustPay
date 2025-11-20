@@ -352,7 +352,7 @@ export const StaggeredMenu = ({
 
       <header className="staggered-menu-header" aria-label="Main navigation header">
         <div className="sm-logo" aria-label="Logo">
-          <div className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+          <div className="text-2xl bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent trustpay-brand">
             TrustPay
           </div>
         </div>

@@ -96,8 +96,8 @@ export default function CreateEscrowFormPage({ setActivePage }) {
   return (
     <div className="max-w-3xl mx-auto py-12">
       <div className="mb-12">
-        <h1 className="text-4xl font-bold text-white mb-4">Let's get you to the right place</h1>
-        <p className="text-xl text-gray-400">We just need a few quick details.</p>
+        <h1 className="text-4xl text-white mb-4" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>Let's get you to the right place</h1>
+        <p className="text-xl text-gray-400" style={{ fontFamily: 'Clash Grotesk', fontWeight: 200 }}>We just need a few quick details.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">

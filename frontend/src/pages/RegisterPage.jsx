@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import LiquidChrome from '../components/LiquidChrome/LiquidChrome';
 
 function RegisterPage({ onSwitchToLogin }) {
   const { register, error } = useAuth();
@@ -49,13 +50,25 @@ function RegisterPage({ onSwitchToLogin }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-4 py-12">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-black px-4 py-12 relative overflow-hidden">
+      {/* LiquidChrome Background */}
+      <div className="absolute inset-0 opacity-30" style={{ pointerEvents: 'none' }}>
+        <LiquidChrome 
+          baseColor={[0.05, 0.05, 0.15]}
+          speed={0.2}
+          amplitude={0.3}
+          frequencyX={2}
+          frequencyY={2}
+          interactive={true}
+        />
+      </div>
+      
+      <div className="max-w-md w-full space-y-8 relative z-10">
         <div>
-          <h2 className="mt-6 text-center text-4xl font-extrabold text-white">
+          <h2 className="mt-6 text-center text-4xl text-white" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>
             Create Account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-400">
+          <p className="mt-2 text-center text-sm text-gray-400" style={{ fontFamily: 'Clash Grotesk', fontWeight: 200 }}>
             Join TrustPay and start secure transactions
           </p>
         </div>

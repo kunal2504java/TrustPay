@@ -80,7 +80,7 @@
 
 .sm-toggle-textWrap {
   position: relative;
-  display: inline-block;
+  display: none; /* Hide the Menu/Close text */
   height: 1em;
   overflow: hidden;
   white-space: nowrap;

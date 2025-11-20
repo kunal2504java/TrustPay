@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
-const AnimatedText = ({ text, className = '', delay = 0.05 }) => {
+const AnimatedText = ({ text, className = '', style = {}, delay = 0.05 }) => {
   const textRef = useRef(null);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const AnimatedText = ({ text, className = '', delay = 0.05 }) => {
   }, [delay]);
 
   return (
-    <h1 ref={textRef} className={className} style={{ perspective: '1000px' }}>
+    <h1 ref={textRef} className={className} style={{ perspective: '1000px', ...style }}>
       {text.split('').map((char, index) => (
         <span
           key={index}
@@ -37,7 +37,9 @@ const AnimatedText = ({ text, className = '', delay = 0.05 }) => {
           style={{ 
             display: 'inline-block',
             transformOrigin: '50% 100%',
-            transformStyle: 'preserve-3d'
+            transformStyle: 'preserve-3d',
+            fontFamily: style.fontFamily || 'inherit',
+            fontWeight: style.fontWeight || 'inherit'
           }}
         >
           {char === ' ' ? '\u00A0' : char}

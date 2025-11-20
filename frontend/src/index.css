@@ -3,13 +3,28 @@
 @tailwind utilities;
 
 * {
-  font-family: 'Khand', sans-serif;
+  font-family: 'Clash Grotesk', sans-serif;
 }
 
-/* Headings use Khand SemiBold for emphasis */
+/* Headings use Clash Grotesk Medium */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Khand', sans-serif;
-  font-weight: 600; /* SemiBold */
+  font-family: 'Clash Grotesk', sans-serif;
+  font-weight: 500; /* Medium */
+}
+
+/* Descriptive text uses Clash Grotesk Extralight */
+p, span, div {
+  font-family: 'Clash Grotesk', sans-serif;
+  font-weight: 200; /* Extralight */
+}
+
+/* TrustPay branding - Bold */
+.trustpay-brand,
+.trustpay-brand *,
+h1.trustpay-brand,
+.trustpay-brand .char {
+  font-family: 'Clash Grotesk', sans-serif !important;
+  font-weight: 700 !important; /* Bold */
 }
 
 html {
