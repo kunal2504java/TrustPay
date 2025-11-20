@@ -13,6 +13,11 @@
   height: 100vh;
   z-index: 40;
   overflow: hidden;
+  pointer-events: none;
+}
+
+.staggered-menu-wrapper.fixed-wrapper[data-open="true"] {
+  pointer-events: auto;
 }
 
 .staggered-menu-header {
@@ -25,11 +30,14 @@
   justify-content: space-between;
   padding: 2em;
   background: transparent;
-  pointer-events: none;
   z-index: 20;
 }
 
-.staggered-menu-header > * {
+.fixed-wrapper .staggered-menu-header {
+  pointer-events: none;
+}
+
+.fixed-wrapper .staggered-menu-header > * {
   pointer-events: auto;
 }
 
