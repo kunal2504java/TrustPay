@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import apiClient from '../services/api';
+import { wsService } from '../services/websocket';
 
 const AuthContext = createContext(null);
 
@@ -12,6 +13,20 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     checkAuth();
   }, []);
+
+  // Initialize WebSocket when user is authenticated
+  useEffect(() => {
+    const token = apiClient.getToken();
+    if (user && token) {
+      wsService.connect(token);
+    } else {
+      wsService.disconnect();
+    }
+
+    return () => {
+      wsService.disconnect();
+    };
+  }, [user]);
 
   const checkAuth = async () => {
     const token = apiClient.getToken();

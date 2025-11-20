@@ -12,6 +12,7 @@ from app.schemas.escrow import EscrowCreate
 from app.services.setu_service import SetuService
 from app.services.blockchain_service import BlockchainService
 from app.services.razorpay_service import RazorpayService
+from app.services.websocket_manager import manager
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +22,21 @@ class EscrowService:
         self.setu_service = SetuService()
         self.blockchain_service = BlockchainService()
         self.razorpay_service = RazorpayService()
+    
+    async def _notify_escrow_update(self, escrow: Escrow, event_type: str = "status_change"):
+        """Send WebSocket notification for escrow updates"""
+        try:
+            update_data = {
+                "escrow_id": str(escrow.id),
+                "status": escrow.status.value,
+                "amount": float(escrow.amount),
+                "event_type": event_type,
+                "timestamp": datetime.now(timezone.utc).isoformat()
+            }
+            
+            await manager.broadcast_escrow_update(str(escrow.id), update_data)
+        except Exception as e:
+            logger.error(f"Error sending WebSocket notification: {e}")
     
     async def create_escrow(self, payer_id: UUID, escrow_data: EscrowCreate) -> Tuple[Escrow, Dict[str, Any]]:
         """
