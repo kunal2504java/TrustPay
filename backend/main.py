@@ -11,8 +11,15 @@ from app.api.v1.api import api_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        print("✓ Database tables created successfully")
+    except Exception as e:
+        print(f"✗ Database initialization error: {e}")
+        # Don't crash the app, just log the error
+        import traceback
+        traceback.print_exc()
     yield
     # Shutdown
     pass
@@ -27,12 +34,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:5173",
-        settings.FRONTEND_URL,  # Production frontend URL from env
-        "https://frontend-five-zeta-36.vercel.app",  # Your Vercel deployment
-    ],
+    allow_origins=["*"],  # Allow all origins for now
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
