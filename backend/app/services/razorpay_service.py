@@ -50,10 +50,23 @@ class RazorpayService:
         self._ensure_client()
         
         try:
+            # Generate a short receipt ID (max 40 chars as per Razorpay requirement)
+            import time
+            import uuid
+            if not receipt:
+                # Use timestamp + short UUID (total ~30 chars)
+                timestamp = int(time.time())
+                short_uuid = str(uuid.uuid4())[:8]
+                receipt = f"rcpt_{timestamp}_{short_uuid}"
+            
+            # Ensure receipt is not longer than 40 characters
+            if len(receipt) > 40:
+                receipt = receipt[:40]
+            
             order_data = {
                 "amount": amount,
                 "currency": currency,
-                "receipt": receipt or f"rcpt_{amount}",
+                "receipt": receipt,
                 "notes": notes or {}
             }
             

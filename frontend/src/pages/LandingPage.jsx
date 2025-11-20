@@ -1,6 +1,6 @@
 import Aurora from '../components/Aurora/Aurora';
 import AnimatedText from '../components/AnimatedText';
-import BubbleMenu from '../components/BubbleMenu/BubbleMenu';
+import StaggeredMenu from '../components/StaggeredMenu/StaggeredMenu';
 import PixelCard from '../components/PixelCard/PixelCard';
 import LogoLoop from '../components/LogoLoop/LogoLoop';
 import PricingSection from '../components/PricingSection';
@@ -9,52 +9,33 @@ import { ShieldCheckIcon, UsersIcon, StoreIcon, GlobeIcon, HeartIcon, UserIcon, 
 
 const LandingHeader = ({ onLogin }) => {
   const menuItems = [
-    {
-      label: 'About',
-      href: '#404',
-      ariaLabel: 'About',
-      rotation: -8,
-      hoverStyles: { bgColor: '#4F46E5', textColor: '#ffffff' }
-    },
-    {
-      label: 'Vision',
-      href: '#404',
-      ariaLabel: 'Vision',
-      rotation: 8,
-      hoverStyles: { bgColor: '#7C3AED', textColor: '#ffffff' }
-    },
-    {
-      label: 'Contact',
-      href: '#404',
-      ariaLabel: 'Contact',
-      rotation: -8,
-      hoverStyles: { bgColor: '#3A29FF', textColor: '#ffffff' }
-    },
-    {
-      label: 'API/SDK',
-      href: '#404',
-      ariaLabel: 'API and SDK Documentation',
-      rotation: 8,
-      hoverStyles: { bgColor: '#10b981', textColor: '#ffffff' }
-    }
+    { label: 'Home', ariaLabel: 'Go to home', link: '#' },
+    { label: 'About', ariaLabel: 'Learn about TrustPay', link: '#about' },
+    { label: 'Pricing', ariaLabel: 'View pricing plans', link: '#pricing' },
+    { label: 'Contact', ariaLabel: 'Get in touch', link: '#contact' }
+  ];
+
+  const socialItems = [
+    { label: 'Twitter', link: 'https://twitter.com' },
+    { label: 'GitHub', link: 'https://github.com' },
+    { label: 'LinkedIn', link: 'https://linkedin.com' }
   ];
 
   return (
-    <BubbleMenu
-      logo={
-        <div className="flex items-center space-x-2 text-white">
-          <ShieldCheckIcon className="w-5 h-5" />
-          <span className="font-black text-lg">TrustPay</span>
-        </div>
-      }
+    <StaggeredMenu
+      position="right"
       items={menuItems}
-      menuAriaLabel="Toggle navigation"
-      menuBg="rgba(255, 255, 255, 0.1)"
-      menuContentColor="#ffffff"
-      useFixedPosition={true}
-      animationEase="back.out(1.5)"
-      animationDuration={0.5}
-      staggerDelay={0.12}
+      socialItems={socialItems}
+      displaySocials={true}
+      displayItemNumbering={true}
+      menuButtonColor="#fff"
+      openMenuButtonColor="#000"
+      changeMenuColorOnOpen={true}
+      colors={['#6366f1', '#8b5cf6']}
+      accentColor="#6366f1"
+      isFixed={true}
+      onMenuOpen={() => console.log('Menu opened')}
+      onMenuClose={() => console.log('Menu closed')}
     />
   );
 };

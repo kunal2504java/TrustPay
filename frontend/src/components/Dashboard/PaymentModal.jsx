@@ -13,13 +13,22 @@ export default function PaymentModal({ escrowId, paymentOrder, amount, onSuccess
   }, []);
 
   const handlePayment = () => {
+    console.log('Payment button clicked');
+    console.log('Razorpay available:', !!window.Razorpay);
+    console.log('Payment order:', paymentOrder);
+    
     if (!window.Razorpay) {
-      setError('Payment system not available');
+      setError('Payment system not available. Please refresh the page.');
       return;
     }
 
-    if (!paymentOrder || paymentOrder.error) {
-      setError(paymentOrder?.message || 'Payment order not available');
+    if (!paymentOrder) {
+      setError('Payment order not created. Please try again.');
+      return;
+    }
+
+    if (paymentOrder.error) {
+      setError(paymentOrder.message || 'Payment order error. Please try again.');
       return;
     }
 
@@ -94,6 +103,18 @@ export default function PaymentModal({ escrowId, paymentOrder, amount, onSuccess
             </div>
           )}
 
+          {!paymentOrder && (
+            <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-3 mb-4">
+              <p className="text-yellow-300 text-sm">⚠️ Payment order not available. Please close and try again.</p>
+            </div>
+          )}
+
+          {paymentOrder && paymentOrder.error && (
+            <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-3 mb-4">
+              <p className="text-red-300 text-sm">❌ {paymentOrder.message || 'Payment order error'}</p>
+            </div>
+          )}
+
           <p className="text-gray-400 text-sm mb-4">
             Click the button below to complete your payment securely through Razorpay.
             Your funds will be held in escrow until both parties confirm.
@@ -110,8 +131,9 @@ export default function PaymentModal({ escrowId, paymentOrder, amount, onSuccess
           </button>
           <button
             onClick={handlePayment}
-            disabled={loading || !paymentOrder || paymentOrder.error}
+            disabled={loading || !paymentOrder || (paymentOrder && paymentOrder.error)}
             className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold hover:shadow-xl hover:shadow-indigo-500/30 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            title={!paymentOrder ? 'Payment order not available' : paymentOrder?.error ? 'Payment order error' : 'Click to pay'}
           >
             {loading ? 'Processing...' : 'Pay Now'}
           </button>
