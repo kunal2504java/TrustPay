@@ -31,11 +31,12 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:5173",
         settings.FRONTEND_URL,  # Production frontend URL from env
-        "https://*.vercel.app",  # Allow all Vercel preview deployments
+        "https://frontend-five-zeta-36.vercel.app",  # Your Vercel deployment
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Include API routes
