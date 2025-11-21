@@ -13,6 +13,7 @@ from app.services.setu_service import SetuService
 from app.services.blockchain_service import BlockchainService
 from app.services.razorpay_service import RazorpayService
 from app.services.websocket_manager import manager
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -132,6 +133,11 @@ class EscrowService:
         
         # Ensure all attributes are loaded
         await self.db.refresh(escrow)
+        
+        # Add Razorpay key to the payment order response for frontend
+        if razorpay_order and "error" not in razorpay_order:
+            razorpay_order["key"] = settings.RAZORPAY_KEY_ID
+        
         return escrow, razorpay_order
     
     async def get_escrow(self, escrow_id: UUID) -> Optional[Escrow]:
