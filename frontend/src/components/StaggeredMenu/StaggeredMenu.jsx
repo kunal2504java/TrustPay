@@ -43,12 +43,10 @@ export const StaggeredMenu = ({
     const ctx = gsap.context(() => {
       const panel = panelRef.current;
       const preContainer = preLayersRef.current;
-      const plusH = plusHRef.current;
-      const plusV = plusVRef.current;
       const icon = iconRef.current;
       const textInner = textInnerRef.current;
 
-      if (!panel || !plusH || !plusV || !icon || !textInner) return;
+      if (!panel || !icon || !textInner) return;
 
       let preLayers = [];
       if (preContainer) {
@@ -58,8 +56,6 @@ export const StaggeredMenu = ({
 
       const offscreen = position === 'left' ? -100 : 100;
       gsap.set([panel, ...preLayers], { xPercent: offscreen });
-      gsap.set(plusH, { transformOrigin: '50% 50%', rotate: 0 });
-      gsap.set(plusV, { transformOrigin: '50% 50%', rotate: 90 });
       gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
       gsap.set(textInner, { yPercent: 0 });
       if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
@@ -352,7 +348,7 @@ export const StaggeredMenu = ({
 
       <header className="staggered-menu-header" aria-label="Main navigation header">
         <div className="sm-logo" aria-label="Logo">
-          <div className="text-2xl bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent trustpay-brand">
+          <div className="text-2xl bg-gradient-to-r from-gray-300 to-white bg-clip-text text-transparent trustpay-brand">
             TrustPay
           </div>
         </div>
@@ -377,8 +373,8 @@ export const StaggeredMenu = ({
           </span>
 
           <span ref={iconRef} className="sm-icon" aria-hidden="true">
-            <span ref={plusHRef} className="sm-icon-line" />
-            <span ref={plusVRef} className="sm-icon-line sm-icon-line-v" />
+            <span className="sm-icon-line" />
+            <span className="sm-icon-line" />
           </span>
         </button>
       </header>

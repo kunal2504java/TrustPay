@@ -46,7 +46,7 @@ const HeroSection = ({ onLogin }) => {
     <section className="min-h-screen flex flex-col relative overflow-hidden bg-black" id="hero-section">
       <div className="absolute inset-0 opacity-40" style={{ pointerEvents: 'none' }}>
         <LiquidChrome 
-          baseColor={[0.05, 0.05, 0.15]}
+          baseColor={[0.1, 0.1, 0.1]}
           speed={0.3}
           amplitude={0.4}
           frequencyX={3}
@@ -63,15 +63,15 @@ const HeroSection = ({ onLogin }) => {
             delay={0.05}
           />
           
-          <h2 className="text-3xl md:text-4xl mb-4" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>
+          <h2 className="text-4xl md:text-5xl mb-4" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>
             UPI Payments You Can Actually Trust.
           </h2>
-          <p className="text-xl md:text-2xl mb-12 text-white/90" style={{ fontFamily: 'Clash Grotesk', fontWeight: 200 }}>
+          <p className="text-2xl md:text-3xl mb-12 text-white/90" style={{ fontFamily: 'Clash Grotesk', fontWeight: 200 }}>
             The trust layer for India's payments. Pay safely, get paid confidently.
           </p>
           <button 
             onClick={onLogin}
-            className="bg-white text-gray-900 px-10 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105"
+            className="bg-white text-gray-900 px-10 py-4 rounded-xl font-bold text-xl hover:shadow-2xl transition-all transform hover:scale-105"
           >
             Create Your First Escrow
           </button>
@@ -182,7 +182,7 @@ const CreateEscrowTeaser = ({ onLogin }) => {
     <section className="py-20 px-6 bg-black relative overflow-hidden">
       <div className="absolute inset-0 opacity-20">
         <LiquidChrome 
-          baseColor={[0.05, 0.05, 0.15]}
+          baseColor={[0.1, 0.1, 0.1]}
           speed={0.2}
           amplitude={0.3}
           frequencyX={2}
@@ -192,14 +192,14 @@ const CreateEscrowTeaser = ({ onLogin }) => {
       </div>
       
       <div className="max-w-xl mx-auto relative z-10">
-        <h2 className="text-4xl md:text-5xl text-center mb-12 text-white" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>
+        <h2 className="text-5xl md:text-6xl text-center mb-12 text-white" style={{ fontFamily: 'Clash Grotesk', fontWeight: 500 }}>
           Simple. Secure. Seamless.
         </h2>
         
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-10">
           <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-white mb-2.5">
+              <label className="block text-lg font-medium text-white mb-2.5">
                 Payee's UPI ID
               </label>
               <div className="relative">
@@ -210,13 +210,13 @@ const CreateEscrowTeaser = ({ onLogin }) => {
                   type="text" 
                   value="freelancer@okbank"
                   disabled
-                  className="w-full pl-11 pr-4 py-3.5 border-0 rounded-lg bg-white/5 text-gray-300 placeholder-gray-500"
+                  className="w-full pl-11 pr-4 py-3.5 border-0 rounded-lg bg-white/5 text-gray-300 placeholder-gray-500 text-lg"
                 />
               </div>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-white mb-2.5">
+              <label className="block text-lg font-medium text-white mb-2.5">
                 Amount (INR)
               </label>
               <div className="relative">
@@ -227,13 +227,13 @@ const CreateEscrowTeaser = ({ onLogin }) => {
                   type="text" 
                   value="5,000"
                   disabled
-                  className="w-full pl-11 pr-4 py-3.5 border-0 rounded-lg bg-white/5 text-gray-300 placeholder-gray-500"
+                  className="w-full pl-11 pr-4 py-3.5 border-0 rounded-lg bg-white/5 text-gray-300 placeholder-gray-500 text-lg"
                 />
               </div>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-white mb-2.5">
+              <label className="block text-lg font-medium text-white mb-2.5">
                 Purpose
               </label>
               <div className="relative">
@@ -244,14 +244,14 @@ const CreateEscrowTeaser = ({ onLogin }) => {
                   rows="3"
                   value="UI design milestone 1"
                   disabled
-                  className="w-full pl-11 pr-4 py-3.5 border-0 rounded-lg bg-white/5 text-gray-300 placeholder-gray-500 resize-none"
+                  className="w-full pl-11 pr-4 py-3.5 border-0 rounded-lg bg-white/5 text-gray-300 placeholder-gray-500 resize-none text-lg"
                 />
               </div>
             </div>
             
             <button 
               onClick={onLogin}
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-semibold text-base hover:shadow-xl hover:shadow-indigo-500/30 transition-all transform hover:scale-[1.02] mt-6"
+              className="w-full bg-gradient-to-r from-gray-700 to-gray-900 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl hover:shadow-gray-500/30 transition-all transform hover:scale-[1.02] mt-6"
             >
               Get Started to Create
             </button>
@@ -268,7 +268,7 @@ const LandingFooter = () => {
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 mb-12">
           <div id="vision">
-            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-gray-300 to-white bg-clip-text text-transparent">
               Our Vision
             </h3>
             <p className="text-gray-300 leading-relaxed">

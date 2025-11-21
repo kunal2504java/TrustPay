@@ -54,7 +54,7 @@ function RegisterPage({ onSwitchToLogin }) {
       {/* LiquidChrome Background */}
       <div className="absolute inset-0 opacity-30" style={{ pointerEvents: 'none' }}>
         <LiquidChrome 
-          baseColor={[0.05, 0.05, 0.15]}
+          baseColor={[0.1, 0.1, 0.1]}
           speed={0.2}
           amplitude={0.3}
           frequencyX={2}

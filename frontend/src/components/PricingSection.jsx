@@ -63,8 +63,8 @@ const PricingSection = ({ onLogin }) => {
     <section className="py-20 px-6 bg-black relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600 rounded-full filter blur-[128px]"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600 rounded-full filter blur-[128px]"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gray-700 rounded-full filter blur-[128px]"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gray-800 rounded-full filter blur-[128px]"></div>
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -87,7 +87,7 @@ const PricingSection = ({ onLogin }) => {
                 }`}
               >
                 {!isYearly && (
-                  <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full shadow-lg shadow-indigo-500/50"></span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-gray-700 to-gray-900 rounded-full shadow-lg shadow-gray-500/50"></span>
                 )}
                 <span className="relative">Monthly</span>
               </button>
@@ -98,7 +98,7 @@ const PricingSection = ({ onLogin }) => {
                 }`}
               >
                 {isYearly && (
-                  <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full shadow-lg shadow-indigo-500/50"></span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-gray-700 to-gray-900 rounded-full shadow-lg shadow-gray-500/50"></span>
                 )}
                 <span className="relative flex items-center gap-2">
                   Yearly
@@ -118,14 +118,14 @@ const PricingSection = ({ onLogin }) => {
               key={plan.name}
               className={`relative rounded-2xl p-8 transition-all duration-300 ${
                 plan.popular
-                  ? 'bg-gradient-to-b from-indigo-900/50 to-purple-900/50 border-2 border-indigo-500 shadow-2xl shadow-indigo-500/30 scale-105'
+                  ? 'bg-gradient-to-b from-gray-800/50 to-gray-900/50 border-2 border-gray-500 shadow-2xl shadow-gray-500/30 scale-105'
                   : 'bg-gray-800/30 backdrop-blur-sm border border-gray-700 hover:border-gray-600'
               }`}
             >
               {/* Popular Badge */}
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                  <span className="bg-gradient-to-r from-gray-700 to-gray-900 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
                     Most Popular
                   </span>
                 </div>
@@ -151,7 +151,7 @@ const PricingSection = ({ onLogin }) => {
                   onClick={onLogin}
                   className={`w-full py-3 rounded-xl font-semibold transition-all ${
                     plan.popular
-                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-xl hover:shadow-indigo-500/50 hover:scale-105'
+                      ? 'bg-gradient-to-r from-gray-700 to-gray-900 text-white hover:shadow-xl hover:shadow-gray-500/50 hover:scale-105'
                       : 'bg-gray-700 text-white hover:bg-gray-600'
                   }`}
                 >
@@ -169,8 +169,8 @@ const PricingSection = ({ onLogin }) => {
                 <ul className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-indigo-600/20 flex items-center justify-center mt-0.5">
-                        <CheckIcon className="w-3 h-3 text-indigo-400" />
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gray-600/20 flex items-center justify-center mt-0.5">
+                        <CheckIcon className="w-3 h-3 text-gray-400" />
                       </div>
                       <span className="text-sm text-gray-300">{feature}</span>
                     </li>

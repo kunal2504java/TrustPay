@@ -33,7 +33,7 @@ export default function Sidebar({ activePage, setActivePage, onLogout }) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.2 }}
-                className="text-xl bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent whitespace-nowrap trustpay-brand"
+                className="text-xl bg-gradient-to-r from-gray-300 to-white bg-clip-text text-transparent whitespace-nowrap trustpay-brand"
               >
                 TrustPay
               </motion.h1>
@@ -52,7 +52,7 @@ export default function Sidebar({ activePage, setActivePage, onLogout }) {
             whileTap={{ scale: 0.98 }}
             className={`w-full flex items-center ${isOpen ? 'space-x-3 px-4' : 'justify-center px-2'} py-3 rounded-lg mb-2 transition-all ${
               activePage === item.id
-                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 font-semibold shadow-lg'
+                ? 'bg-gradient-to-r from-gray-700 to-gray-900 font-semibold shadow-lg'
                 : 'hover:bg-white/5'
             }`}
           >
@@ -77,7 +77,7 @@ export default function Sidebar({ activePage, setActivePage, onLogout }) {
       {/* User Section */}
       <div className="p-4 border-t border-white/10">
         <div className={`flex items-center ${isOpen ? 'space-x-3' : 'justify-center'} mb-4`}>
-          <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-900 rounded-full flex items-center justify-center flex-shrink-0">
             <UserIcon />
           </div>
           <AnimatePresence>
