@@ -20,8 +20,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application code
 COPY . .
 
+# Make start script executable
+RUN chmod +x start.sh
+
 # Expose port (Railway will override with $PORT)
 EXPOSE 8000
 
-# Start command - using shell form for variable expansion
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Use start script as entrypoint
+CMD ["./start.sh"]
