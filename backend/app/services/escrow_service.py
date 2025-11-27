@@ -4,6 +4,8 @@ from typing import List, Optional, Dict, Any, Tuple
 from uuid import UUID
 from datetime import datetime, timedelta, timezone
 import logging
+import random
+import string
 
 from app.models.escrow import Escrow, EscrowStatus
 from app.models.confirmation import Confirmation
@@ -17,12 +19,43 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
+# Random escrow names for friendly identification
+ESCROW_NAMES = [
+    "Swift Eagle", "Golden Phoenix", "Silver Hawk", "Blue Falcon", "Red Dragon",
+    "Green Tiger", "Purple Wolf", "Orange Lion", "Pink Panther", "Black Bear",
+    "White Shark", "Gray Dolphin", "Brown Fox", "Yellow Bee", "Cyan Whale",
+    "Magenta Owl", "Teal Raven", "Crimson Cobra", "Azure Lynx", "Jade Leopard",
+    "Ruby Cheetah", "Sapphire Jaguar", "Emerald Puma", "Diamond Cougar", "Pearl Lynx",
+    "Amber Viper", "Coral Serpent", "Ivory Mongoose", "Onyx Badger", "Quartz Otter"
+]
+
 class EscrowService:
     def __init__(self, db: AsyncSession):
         self.db = db
-        self.setu_service = SetuService()
         self.blockchain_service = BlockchainService()
         self.razorpay_service = RazorpayService()
+    
+    def _generate_escrow_code(self) -> str:
+        """Generate a unique 6-character alphanumeric escrow code (e.g., 67A9G2)"""
+        characters = string.ascii_uppercase + string.digits
+        return ''.join(random.choices(characters, k=6))
+    
+    async def _get_unique_escrow_code(self) -> str:
+        """Generate a unique escrow code that doesn't exist in database"""
+        max_attempts = 10
+        for _ in range(max_attempts):
+            code = self._generate_escrow_code()
+            # Check if code already exists
+            result = await self.db.execute(
+                select(Escrow).where(Escrow.escrow_code == code)
+            )
+            if not result.scalar_one_or_none():
+                return code
+        raise Exception("Failed to generate unique escrow code after multiple attempts")
+    
+    def _generate_escrow_name(self) -> str:
+        """Generate a random friendly name for the escrow"""
+        return random.choice(ESCROW_NAMES)
     
     async def _notify_escrow_update(self, escrow: Escrow, event_type: str = "status_change"):
         """Send WebSocket notification for escrow updates"""
@@ -32,6 +65,7 @@ class EscrowService:
                 "status": escrow.status.value,
                 "amount": float(escrow.amount),
                 "event_type": event_type,
+                "payee_id": str(escrow.payee_id) if escrow.payee_id else None,
                 "timestamp": datetime.now(timezone.utc).isoformat()
             }
             
@@ -48,6 +82,10 @@ class EscrowService:
         """
         
         try:
+            # Generate unique escrow code and name
+            escrow_code = await self._get_unique_escrow_code()
+            escrow_name = self._generate_escrow_name()
+            
             # Create escrow record
             escrow = Escrow(
                 payer_id=payer_id,
@@ -58,6 +96,9 @@ class EscrowService:
                 order_id=escrow_data.order_id,
                 condition=escrow_data.condition,
                 status=EscrowStatus.INITIATED,
+                escrow_code=escrow_code,
+                escrow_name=escrow_name,
+                is_code_active=True,
                 expires_at=datetime.now(timezone.utc) + timedelta(days=7),  # 7 days expiry
                 payment_initiated_at=datetime.now(timezone.utc)
             )
@@ -147,13 +188,61 @@ class EscrowService:
         )
         return result.scalar_one_or_none()
     
-    async def get_user_escrows(self, user_id: UUID) -> List[Escrow]:
-        """Get all escrows for a user"""
+    async def get_user_escrows(self, user_id: UUID, user_vpa: str = None) -> List[Escrow]:
+        """Get all escrows for a user (as payer or payee)"""
+        from sqlalchemy import or_
+        
+        # Build query to find escrows where user is payer OR payee
+        conditions = [Escrow.payer_id == user_id]
+        
+        # If user has a VPA, also include escrows where they are the payee
+        if user_vpa:
+            conditions.append(Escrow.payee_vpa == user_vpa)
+        
         result = await self.db.execute(
-            select(Escrow).where(Escrow.payer_id == user_id).order_by(Escrow.created_at.desc())
+            select(Escrow).where(or_(*conditions)).order_by(Escrow.created_at.desc())
         )
         return list(result.scalars().all())
     
+    async def join_escrow_by_code(self, user_id: UUID, user_vpa: str, escrow_code: str) -> Escrow:
+        """Join an escrow using its code"""
+        # Find escrow by code
+        result = await self.db.execute(
+            select(Escrow).where(Escrow.escrow_code == escrow_code)
+        )
+        escrow = result.scalar_one_or_none()
+        
+        if not escrow:
+            raise ValueError("Invalid escrow code. Please check and try again.")
+            
+        if not escrow.is_code_active:
+            raise ValueError("This escrow code is no longer active.")
+            
+        # If user is the payer, just return the escrow
+        if escrow.payer_id == user_id:
+            return escrow
+            
+        # If user is not payer, assume they are the payee joining
+        # Update the payee_vpa to the joining user's VPA
+        # Also set the payee_id to the joining user's ID
+        should_update = False
+        
+        if escrow.payee_vpa != user_vpa:
+            escrow.payee_vpa = user_vpa
+            should_update = True
+            
+        if escrow.payee_id != user_id:
+            escrow.payee_id = user_id
+            should_update = True
+            
+        if should_update:
+            await self.db.commit()
+            await self.db.refresh(escrow)
+            # Notify that participant has joined
+            await self._notify_escrow_update(escrow, event_type="participant_joined")
+            
+        return escrow
+
     async def confirm_escrow(self, escrow_id: UUID, user_id: UUID) -> dict:
         """Confirm escrow completion and trigger payout if both parties confirmed"""
         escrow = await self.get_escrow(escrow_id)

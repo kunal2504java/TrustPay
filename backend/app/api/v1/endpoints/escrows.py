@@ -6,7 +6,7 @@ from uuid import UUID
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.user import User
-from app.schemas.escrow import EscrowCreate, EscrowResponse, EscrowWithPaymentOrder
+from app.schemas.escrow import EscrowCreate, EscrowResponse, EscrowWithPaymentOrder, EscrowCodeJoin
 from app.services.escrow_service import EscrowService
 
 router = APIRouter()
@@ -56,9 +56,31 @@ async def list_escrows(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """List user's escrows"""
+    """List user's escrows (as payer or payee)"""
     escrow_service = EscrowService(db)
-    return await escrow_service.get_user_escrows(current_user.id)
+    return await escrow_service.get_user_escrows(current_user.id, current_user.vpa)
+
+@router.post("/join-by-code", response_model=EscrowResponse)
+async def join_escrow_by_code(
+    join_data: EscrowCodeJoin,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Join an existing escrow using its 6-character code"""
+    escrow_service = EscrowService(db)
+    
+    try:
+        escrow = await escrow_service.join_escrow_by_code(
+            user_id=current_user.id,
+            user_vpa=current_user.vpa,
+            escrow_code=join_data.escrow_code
+        )
+        return escrow
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
 
 @router.post("/{escrow_id}/confirm")
 async def confirm_escrow(

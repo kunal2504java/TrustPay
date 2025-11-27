@@ -51,7 +51,7 @@ class ApiClient {
 
     try {
       const response = await fetch(url, config);
-      
+
       // Parse JSON response
       const data = await response.json().catch(() => null);
 
@@ -61,7 +61,7 @@ class ApiClient {
           this.clearAuth();
           window.location.href = '/'; // Redirect to login
         }
-        
+
         throw new Error(data?.detail || `HTTP error! status: ${response.status}`);
       }
 
@@ -165,6 +165,24 @@ class ApiClient {
 
   async cancelEscrow(escrowId, reason) {
     return this.post(`/api/v1/escrows/${escrowId}/cancel`, { reason });
+  }
+
+  async joinEscrowByCode(escrowCode) {
+    return this.post('/api/v1/escrows/join-by-code', { escrow_code: escrowCode });
+  }
+
+  // ============ Analytics APIs ============
+
+  async getAnalyticsStats() {
+    return this.get('/api/v1/analytics/stats');
+  }
+
+  async getAnalyticsHistory(days = 30) {
+    return this.get(`/api/v1/analytics/history?days=${days}`);
+  }
+
+  async getAnalyticsDistribution() {
+    return this.get('/api/v1/analytics/distribution');
   }
 
   // ============ Health Check ============

@@ -79,15 +79,15 @@ export default function DashboardListPage({ setActivePage, setSelectedEscrowId }
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-white">Overview</h1>
+        <h1 className="text-3xl font-bold text-white" style={{ fontFamily: 'Inter, sans-serif' }}>Overview</h1>
         <div className="flex items-center space-x-4">
           <button 
             onClick={loadEscrows}
-            className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
+            className="text-sm text-neutral-400 hover:text-white transition-colors"
           >
             🔄 Refresh
           </button>
-          <div className="text-gray-400 text-sm">
+          <div className="text-neutral-500 text-sm">
             {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
           </div>
         </div>
@@ -96,65 +96,65 @@ export default function DashboardListPage({ setActivePage, setSelectedEscrowId }
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Total Escrows */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+        <div className="bg-[#242424] border border-[#2a2a2a] rounded-lg p-6 hover:border-[#333333] transition-colors">
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-sm font-medium text-gray-400">Total Escrows</h3>
-            <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 className="text-sm font-medium text-[#888888]">Total Escrows</h3>
+            <svg className="w-5 h-5 text-[#666666]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
           <div className="text-4xl font-bold text-white mb-2">{metrics.totalEscrows}</div>
-          <div className="text-xs text-gray-500">All time</div>
+          <div className="text-xs text-[#666666]">All time</div>
         </div>
 
         {/* Active Escrows */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+        <div className="bg-[#242424] border border-[#2a2a2a] rounded-lg p-6 hover:border-[#333333] transition-colors">
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-sm font-medium text-gray-400">Active Escrows</h3>
-            <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 className="text-sm font-medium text-[#888888]">Active Escrows</h3>
+            <svg className="w-5 h-5 text-[#666666]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div className="text-4xl font-bold text-white mb-2">{metrics.activeEscrows}</div>
-          <div className="text-xs text-gray-500">Currently held</div>
+          <div className="text-xs text-[#666666]">Currently held</div>
         </div>
 
         {/* Total Value */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+        <div className="bg-[#242424] border border-[#2a2a2a] rounded-lg p-6 hover:border-[#333333] transition-colors">
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-sm font-medium text-gray-400">Total Value</h3>
-            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 className="text-sm font-medium text-[#888888]">Total Value</h3>
+            <svg className="w-5 h-5 text-[#666666]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 8h6m-5 0a3 3 0 110 6H9l3 3m-3-6h6m6 1a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div className="text-4xl font-bold text-white mb-2">₹{metrics.totalValue.toLocaleString('en-IN')}</div>
-          <div className="text-xs text-gray-500">All escrows</div>
+          <div className="text-xs text-[#666666]">All escrows</div>
         </div>
 
         {/* Completed */}
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+        <div className="bg-[#242424] border border-[#2a2a2a] rounded-lg p-6 hover:border-[#333333] transition-colors">
           <div className="flex justify-between items-start mb-4">
-            <h3 className="text-sm font-medium text-gray-400">Completed</h3>
-            <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 className="text-sm font-medium text-[#888888]">Completed</h3>
+            <svg className="w-5 h-5 text-[#666666]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div className="text-4xl font-bold text-white mb-2">{metrics.completedEscrows}</div>
-          <div className="text-xs text-gray-500">Successfully released</div>
+          <div className="text-xs text-[#666666]">Successfully released</div>
         </div>
       </div>
 
       {/* Escrows Section */}
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-        <h2 className="text-2xl font-bold text-white mb-6">Your Escrows</h2>
+      <div className="bg-[#242424] border border-[#2a2a2a] rounded-lg p-6">
+        <h2 className="text-2xl font-bold text-white mb-6" style={{ fontFamily: 'Inter, sans-serif' }}>Your Escrows</h2>
 
-        <div className="flex space-x-4 mb-6 border-b border-white/10">
+        <div className="flex space-x-4 mb-6 border-b border-[#2a2a2a]">
           <button
             onClick={() => setActiveTab('active')}
             className={`pb-3 px-4 font-semibold transition-colors ${
               activeTab === 'active'
-                ? 'text-indigo-400 border-b-2 border-indigo-400'
-                : 'text-gray-400 hover:text-gray-200'
+                ? 'text-white border-b-2 border-white'
+                : 'text-[#888888] hover:text-white'
             }`}
           >
             Active ({metrics.activeEscrows + metrics.disputedEscrows})
@@ -163,8 +163,8 @@ export default function DashboardListPage({ setActivePage, setSelectedEscrowId }
             onClick={() => setActiveTab('completed')}
             className={`pb-3 px-4 font-semibold transition-colors ${
               activeTab === 'completed'
-                ? 'text-indigo-400 border-b-2 border-indigo-400'
-                : 'text-gray-400 hover:text-gray-200'
+                ? 'text-white border-b-2 border-white'
+                : 'text-[#888888] hover:text-white'
             }`}
           >
             Completed ({metrics.completedEscrows})
@@ -188,11 +188,11 @@ export default function DashboardListPage({ setActivePage, setSelectedEscrowId }
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 text-gray-400">
+          <div className="text-center py-12 text-[#888888]">
             <p>No escrows found in this category.</p>
             <button
               onClick={() => setActivePage('create')}
-              className="mt-4 px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all"
+              className="mt-4 px-6 py-2 bg-white hover:bg-[#e0e0e0] text-black rounded-lg transition-all font-medium"
             >
               Create Your First Escrow
             </button>

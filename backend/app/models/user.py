@@ -31,4 +31,5 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
     # Relationships
-    escrows = relationship("Escrow", back_populates="payer")
+    escrows = relationship("Escrow", foreign_keys="[Escrow.payer_id]", back_populates="payer")
+    escrows_received = relationship("Escrow", foreign_keys="[Escrow.payee_id]", back_populates="payee")

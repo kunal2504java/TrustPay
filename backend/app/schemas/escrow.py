@@ -30,6 +30,11 @@ class EscrowResponse(EscrowBase):
     setu_collect_id: Optional[str]
     blockchain_tx_hash: Optional[str]
     
+    # Escrow matching system
+    escrow_code: str = Field(..., description="6-character escrow code")
+    escrow_name: Optional[str] = Field(None, description="Random friendly name")
+    is_code_active: bool = Field(default=True, description="Whether code can be used to join")
+    
     # Razorpay fields
     razorpay_order_id: Optional[str] = None
     razorpay_payment_id: Optional[str] = None
@@ -53,3 +58,7 @@ class EscrowWithPaymentOrder(BaseModel):
     """Response when creating escrow with Razorpay payment order"""
     escrow: EscrowResponse
     payment_order: Dict[str, Any] = Field(..., description="Razorpay payment order details")
+
+class EscrowCodeJoin(BaseModel):
+    """Request to join escrow by code"""
+    escrow_code: str = Field(..., min_length=6, max_length=6, description="6-character escrow code")

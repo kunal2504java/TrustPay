@@ -13,12 +13,12 @@ module.exports = {
     }
   },
   networks: {
-    // Polygon Mumbai Testnet
-    mumbai: {
-      url: process.env.POLYGON_MUMBAI_RPC || "https://rpc-mumbai.maticvigil.com",
+    // Polygon Amoy Testnet (Mumbai deprecated)
+    amoy: {
+      url: process.env.POLYGON_AMOY_RPC || "https://rpc-amoy.polygon.technology",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 80001,
-      gasPrice: 20000000000 // 20 gwei
+      chainId: 80002,
+      gasPrice: 30000000000 // 30 gwei (Amoy minimum is 25 gwei)
     },
     // Polygon Mainnet
     polygon: {
@@ -35,7 +35,7 @@ module.exports = {
   etherscan: {
     apiKey: {
       polygon: process.env.POLYGONSCAN_API_KEY || "",
-      polygonMumbai: process.env.POLYGONSCAN_API_KEY || ""
+      polygonAmoy: process.env.POLYGONSCAN_API_KEY || ""
     }
   },
   paths: {

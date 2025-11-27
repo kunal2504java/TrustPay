@@ -22,7 +22,8 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
 
 
 
-  - [ ] 2.1 Create RazorpayService class with client initialization
+  - [x] 2.1 Create RazorpayService class with client initialization
+
     - Write `backend/app/services/razorpay_service.py` with Razorpay client setup
     - Implement `__init__` method to initialize client with API credentials from config
     - Add error handling for missing or invalid credentials
@@ -30,7 +31,9 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
 
     - _Requirements: 7.1, 7.2_
 
-  - [ ] 2.2 Implement payment order creation
+  - [x] 2.2 Implement payment order creation
+
+
     - Write `create_payment_order()` method to create Razorpay orders
     - Accept amount, currency, receipt, and notes parameters
 
@@ -50,6 +53,7 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
 
 
 
+
   - [ ] 2.4 Implement payout creation
     - Write `create_payout()` method for fund releases
     - Accept account_number, amount, mode (UPI), fund_account details, and reference_id
@@ -58,6 +62,7 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
 
     - Add error handling for insufficient balance and invalid UPI
     - _Requirements: 3.1, 3.2_
+
 
 
 
@@ -87,16 +92,23 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
 
 
 
+
+
+
     - _Requirements: 2.3, 2.4_
 
 - [ ] 3. Update database models for payment tracking
-  - [ ] 3.1 Add Razorpay fields to Escrow model
+  - [x] 3.1 Add Razorpay fields to Escrow model
+
+
     - Add columns: razorpay_order_id, razorpay_payment_id, razorpay_payout_id, razorpay_refund_id
 
 
     - Add timestamp columns: payment_initiated_at, payment_completed_at, payout_initiated_at, payout_completed_at
     - Add error tracking columns: last_payment_error, payment_retry_count
     - _Requirements: 1.4, 3.3, 5.2_
+
+
 
   - [ ] 3.2 Create PaymentLog model for audit trail
     - Create `backend/app/models/payment_log.py` with PaymentLog model
@@ -108,6 +120,9 @@ This plan breaks down the Razorpay UPI integration into discrete, actionable cod
 
   - [ ] 3.3 Add UPI fields to User model
     - Add columns: upi_id, upi_verified, bank_account_number, bank_ifsc, bank_account_name
+
+
+
 
 
     - Update user schema to include new fields

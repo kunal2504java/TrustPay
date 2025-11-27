@@ -73,6 +73,7 @@ TrustPay/
 ### Blockchain
 - **Polygon** - Layer 2 scaling
 - **Solidity** - Smart contracts
+- **Hardhat** - Development framework
 
 ## 🚀 Quick Start
 
@@ -105,6 +106,27 @@ python main.py
 Backend API runs at `http://localhost:8000`
 
 API docs at `http://localhost:8000/docs`
+
+### Blockchain Deployment
+
+Deploy the smart contract to Polygon blockchain:
+
+**Quick Deploy (Windows):**
+```bash
+deploy-contract.bat
+```
+
+**Manual Deploy:**
+```bash
+cd blockchain
+npm install
+npm run verify-setup
+npm run deploy:amoy
+```
+
+**📚 Deployment Guide:** [BLOCKCHAIN_DEPLOYMENT.md](./BLOCKCHAIN_DEPLOYMENT.md)
+
+After deployment, update `backend/.env` with the contract address from `blockchain/deployments/amoy.json`
 
 ## 📱 User Personas
 

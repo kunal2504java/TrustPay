@@ -23,11 +23,16 @@ class Settings(BaseSettings):
     PRIVATE_KEY: Optional[str] = None
     CONTRACT_ADDRESS: Optional[str] = None
     
-    # UPI Gateway (Setu)
-    SETU_API_KEY: Optional[str] = None
-    SETU_BASE_URL: str = "https://api.setu.co"
+    # UPI Gateway (Setu) - PRIMARY PAYMENT PROVIDER
+    SETU_CLIENT_ID: Optional[str] = None
+    SETU_CLIENT_SECRET: Optional[str] = None
+    SETU_BASE_URL: str = "https://umap-uat-core.setu.co"  # UAT for testing, prod: https://umap.setu.co
+    SETU_MERCHANT_ID: Optional[str] = None
+    SETU_MERCHANT_VPA: Optional[str] = None
+    SETU_WEBHOOK_SECRET: Optional[str] = None
+    SETU_SCHEME_ID: Optional[str] = None  # Setu scheme ID for UPI
     
-    # Razorpay Integration
+    # Razorpay Integration (LEGACY - Optional, for backward compatibility)
     RAZORPAY_KEY_ID: Optional[str] = None
     RAZORPAY_KEY_SECRET: Optional[str] = None
     RAZORPAY_WEBHOOK_SECRET: Optional[str] = None

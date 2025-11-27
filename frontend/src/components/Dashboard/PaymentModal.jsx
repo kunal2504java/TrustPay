@@ -16,7 +16,7 @@ export default function PaymentModal({ escrowId, paymentOrder, amount, onSuccess
     console.log('Payment button clicked');
     console.log('Razorpay available:', !!window.Razorpay);
     console.log('Payment order:', paymentOrder);
-    
+
     if (!window.Razorpay) {
       setError('Payment system not available. Please refresh the page.');
       return;
@@ -36,7 +36,7 @@ export default function PaymentModal({ escrowId, paymentOrder, amount, onSuccess
     setError(null);
 
     const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_key', // Replace with your key
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || paymentOrder.key, // Use key from env or order
       amount: paymentOrder.amount,
       currency: paymentOrder.currency || 'INR',
       name: 'TrustPay',
@@ -58,7 +58,7 @@ export default function PaymentModal({ escrowId, paymentOrder, amount, onSuccess
         color: '#6366f1'
       },
       modal: {
-        ondismiss: function() {
+        ondismiss: function () {
           setLoading(false);
           console.log('Payment cancelled by user');
         }
@@ -84,7 +84,7 @@ export default function PaymentModal({ escrowId, paymentOrder, amount, onSuccess
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-gray-900 rounded-2xl p-8 max-w-md w-full border border-gray-800">
         <h2 className="text-2xl font-bold text-white mb-4">Complete Payment</h2>
-        
+
         <div className="mb-6">
           <div className="bg-gray-800/50 rounded-lg p-4 mb-4">
             <div className="flex justify-between items-center mb-2">

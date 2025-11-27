@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "TrustPay Smart Contracts",
   "scripts": {
+    "verify-setup": "node verify-setup.js",
+    "check-balance": "node check-balance.js",
     "compile": "hardhat compile",
     "test": "hardhat test",
     "deploy:local": "hardhat run scripts/deploy.js --network hardhat",
-    "deploy:mumbai": "hardhat run scripts/deploy.js --network mumbai",
+    "deploy:amoy": "hardhat run scripts/deploy.js --network amoy",
     "deploy:polygon": "hardhat run scripts/deploy.js --network polygon",
-    "verify:mumbai": "hardhat verify --network mumbai",
+    "verify:amoy": "hardhat verify --network amoy",
     "verify:polygon": "hardhat verify --network polygon"
   },
   "devDependencies": {
